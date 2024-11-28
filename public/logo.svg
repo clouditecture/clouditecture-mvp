@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="web-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 38">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: #69cff7;
+      }
+
+      .cls-3 {
+        fill: #1b65a6;
+      }
+
+      .cls-4 {
+        fill: #05aff2;
+      }
+
+      .cls-4, .cls-5 {
+        opacity: .8;
+      }
+
+      .cls-6 {
+        fill: #fff;
+        opacity: .7;
+      }
+
+      .cls-7, .cls-5 {
+        fill: #0483b6;
+      }
+
+      .cls-2 {
+        opacity: .9;
+      }
+    </style>
+  </defs>
+  <path id="cloud" class="cls-6" d="m10.22,17.01C4.79,17.01.46,21.98.46,27.41s4.62,9.85,10.05,9.85h46.22c7.06,0,12.8-5.74,12.8-12.8s-5.58-12.9-12.7-13c-.76-.01-2.67.23-2.67.23l-.11-.25C50.98,4.83,44.58.75,37.35.75c-3.92,0-7.65,1.22-10.8,3.54-3.08,2.27-5.31,5.38-6.51,9l-.08.25s-1.01-.15-1.32-.13c-2.83.22-4.61,1.4-5.81,3.87,0,0-1.44-.33-2.61-.26Z"/>
+  <g>
+    <circle class="cls-3" cx="56.63" cy="24.37" r="12.92"/>
+    <circle class="cls-4" cx="37.41" cy="18.99" r="18.27"/>
+    <circle class="cls-7" cx="10.57" cy="27.12" r="10.11"/>
+    <rect class="cls-5" x="19.67" y="22.68" width="38.36" height="14.55"/>
+    <circle class="cls-2" cx="18.7" cy="19.76" r="6.35"/>
+    <polygon class="cls-1" points="18.34 26.11 24.76 37.23 11.92 37.23 18.34 26.11"/>
+  </g>
+</svg>
