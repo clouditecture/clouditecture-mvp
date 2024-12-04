@@ -1,4 +1,3 @@
-import { exportComponentAsPNG } from "react-component-export-image";
 import {
   ChevronDown,
   Redo,
@@ -11,8 +10,8 @@ import {
   ZoomOut,
   ChevronDownIcon,
   Bot,
-  Download,
   ChevronUp,
+  CircleUserIcon,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -24,8 +23,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import useStore from "../store/useStore";
+import DownloadButton from "./DownloadButton";
 
-export default function Topbar({ canvasRef }) {
+export default function Topbar() {
   const {
     zoomLevel,
     zoomIn,
@@ -38,17 +38,11 @@ export default function Topbar({ canvasRef }) {
     copyNodes,
     pasteNodes,
     deleteSelected,
-    isCanvasEmpty,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
   } = useStore();
-
-  const handleDownload = () => {
-    if (canvasRef.current) {
-      exportComponentAsPNG(canvasRef, {
-        fileName: "cloud-architecture.png",
-        html2CanvasOptions: { backgroundColor: "#ffffff" },
-      });
-    }
-  };
 
   return (
     <div className="absolute top-4 left-4 right-4 flex items-center justify-between p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50 rounded-lg shadow-md">
@@ -72,10 +66,21 @@ export default function Topbar({ canvasRef }) {
 
         {/* Action buttons */}
         <div className="flex space-x-2">
-          <Button variant="ghost" size="icon">
+          {/* Undo and Redo buttons */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={undo}
+            disabled={!canUndo()}
+          >
             <Undo className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={redo}
+            disabled={!canRedo()}
+          >
             <Redo className="h-4 w-4" />
           </Button>
         </div>
@@ -142,7 +147,7 @@ export default function Topbar({ canvasRef }) {
       </div>
 
       {/* Logo and Title in the center */}
-      <div className="flex items-center space-x-2 w-[20vw]">
+      <div className="flex items-center space-x-2 max-w-fit">
         <img
           src="/logo.svg?height=32&width=32"
           alt="Clouditecture Logo"
@@ -152,19 +157,13 @@ export default function Topbar({ canvasRef }) {
       </div>
 
       {/* AI Assistant Button on the right */}
-      <div className="w-[320px] flex flex-row justify-between items-center">
+      <div className="max-w-fit gap-4 flex flex-row justify-between items-center">
         <Button variant="outline">
           <Bot className="mr-2 h-4 w-4" />
           AI Assistant
         </Button>
-        <Button
-          variant="outline"
-          onClick={handleDownload}
-          disabled={isCanvasEmpty()}
-        >
-          <Download className="mr-2 h-4 w-4" />
-          Save/Download
-        </Button>
+        <DownloadButton />
+        <CircleUserIcon />
       </div>
     </div>
   );

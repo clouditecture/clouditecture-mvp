@@ -24,19 +24,23 @@ const createCategoryStructure = (icons) => {
   return structure;
 };
 
+const formatDisplayName = (name) => {
+  return name.replace(/[-_]/g, " ");
+};
+
 const NestedCategory = React.memo(function NestedCategory({
   category,
   icons,
-  depth,
   searchTerm,
   onIconSelect,
   parentCategory,
+  depth = 0,
 }) {
   const fullCategory = parentCategory
     ? `${parentCategory}.${category}`
     : category;
   const isExpanded = useStore(
-    (state) => state.expandedCategories[fullCategory]
+    (state) => state.expandedCategories[fullCategory] ?? true
   );
   const toggleCategoryExpanded = useStore(
     (state) => state.toggleCategoryExpanded
@@ -51,7 +55,7 @@ const NestedCategory = React.memo(function NestedCategory({
     return Object.entries(icons).filter(
       ([name, value]) =>
         typeof value === "string" &&
-        name.toLowerCase().includes(searchTerm.toLowerCase())
+        formatDisplayName(name).toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [icons, searchTerm]);
 
@@ -65,14 +69,27 @@ const NestedCategory = React.memo(function NestedCategory({
     return null;
   }
 
+  const getFontSize = (depth) => {
+    switch (depth) {
+      case 0:
+        return "text-[18px] font-serif capitalize";
+      case 1:
+        return "text-[14px] font-serif capitalize";
+      default:
+        return "text-[12px] font-serif capitalize";
+    }
+  };
+
   return (
-    <div className={`mb-2 ${depth > 0 ? "ml-4" : ""}`}>
+    <div className="mb-2">
       <Button
         variant="ghost"
-        className="w-full justify-between mb-2 text-left"
+        className={`w-full justify-between mb-2 text-left ${getFontSize(
+          depth
+        )}`}
         onClick={toggleExpand}
       >
-        <span className="truncate">{category}</span>
+        <span className="truncate">{formatDisplayName(category)}</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -92,7 +109,7 @@ const NestedCategory = React.memo(function NestedCategory({
       </Button>
       {isExpanded && (
         <>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-2">
+          <div className="grid grid-cols-4 sm:grid-cols-4 gap-2 mb-2">
             {filteredIcons.map(([name, svg]) => (
               <div
                 key={name}
@@ -127,9 +144,9 @@ const NestedCategory = React.memo(function NestedCategory({
                 </div>
                 <span
                   className="text-xs text-center leading-tight truncate w-full"
-                  title={name}
+                  title={formatDisplayName(name)}
                 >
-                  {name}
+                  {formatDisplayName(name)}
                 </span>
               </div>
             ))}
@@ -139,10 +156,10 @@ const NestedCategory = React.memo(function NestedCategory({
               key={subCategory}
               category={subCategory}
               icons={subIcons}
-              depth={depth + 1}
               searchTerm={searchTerm}
               onIconSelect={onIconSelect}
               parentCategory={fullCategory}
+              depth={depth + 1}
             />
           ))}
         </>
@@ -154,10 +171,10 @@ const NestedCategory = React.memo(function NestedCategory({
 NestedCategory.propTypes = {
   category: PropTypes.string.isRequired,
   icons: PropTypes.object.isRequired,
-  depth: PropTypes.number.isRequired,
   searchTerm: PropTypes.string.isRequired,
   onIconSelect: PropTypes.func.isRequired,
   parentCategory: PropTypes.string,
+  depth: PropTypes.number,
 };
 
 const ShapePanel = () => {
@@ -202,9 +219,9 @@ const ShapePanel = () => {
             key={category}
             category={category}
             icons={icons}
-            depth={0}
             searchTerm={searchTerm}
             onIconSelect={onIconSelect}
+            depth={0}
           />
         ))}
       </div>
