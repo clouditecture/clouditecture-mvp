@@ -52,9 +52,15 @@ const IconNode = ({ id, data, selected }) => {
     }
   }, [stopEditing]);
 
-  const onResize = useCallback((evt, { width, height }) => {
-    updateNodeDimensions(id, width, height);
-  }, [id, updateNodeDimensions]);
+  const onResize = useCallback(
+    (evt, { width, height }) => {
+      // Ensure minimum sizes are respected
+      const newWidth = Math.max(width, 50); // Minimum width
+      const newHeight = Math.max(height, 50); // Minimum height
+      updateNodeDimensions(id, newWidth, newHeight);
+    },
+    [id, updateNodeDimensions]
+  );
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -135,36 +141,50 @@ const IconNode = ({ id, data, selected }) => {
         />
 
         {/* SVG Container */}
-        <div className="w-full h-full flex items-center justify-center">
-          <div
-            dangerouslySetInnerHTML={{ __html: svgContent }}
-            className="w-full h-full flex items-center justify-center"
-          />
-        </div>
+        <div className="w-full h-full flex items-center justify-center overflow-hidden">
+  <div
+    dangerouslySetInnerHTML={{ __html: svgContent }}
+    className="w-full h-full"
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      objectFit: 'contain',
+    }}
+  />
+</div>
 
         {/* Label */}
-        <div className="absolute left-0 right-0 mt-[150px] text-center w-full" onClick={startEditing} onDoubleClick={startEditing}>
-          {isEditing ? (
-            <input
-            ref={inputRef}
-              type="text"
-              value={labelText}
-              onChange={onLabelChange}
-              onBlur={stopEditing}
-              onKeyDown={handleKeyDown}
-              className="text-xs border rounded px-1 bg-white w-full text-center"
-              autoFocus
-            />
-          ) : (
-            <div
-              className="cursor-pointer text-xs max-w-full break-words bg-white bg-opacity-50 px-1 rounded"
-              onClick={startEditing}
-              title={labelText}
-            >
-              {labelText}
-            </div>
-          )}
-        </div>
+
+        <div
+  className="absolute left-0 right-0 text-center w-full"
+  style={{
+    top: `calc(${data.height || 100}px + 10px)`, // Position below the node
+  }}
+  onClick={startEditing}
+  onDoubleClick={startEditing}
+>
+  {isEditing ? (
+    <input
+      ref={inputRef}
+      type="text"
+      value={labelText}
+      onChange={onLabelChange}
+      onBlur={stopEditing}
+      onKeyDown={handleKeyDown}
+      className="text-xs border rounded px-1 bg-white w-full text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+      autoFocus
+    />
+  ) : (
+    <div
+      className="cursor-pointer text-xs max-w-full break-words bg-white bg-opacity-50 px-1 rounded"
+      title={labelText || "Click to edit"}
+    >
+      {labelText || "Label"}
+    </div>
+  )}
+</div>
+
       </div>
     </>
   );
