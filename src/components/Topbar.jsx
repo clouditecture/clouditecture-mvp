@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   ChevronDown,
   Redo,
@@ -44,6 +45,26 @@ export default function Topbar() {
     canRedo,
   } = useStore();
 
+    // Add Ctrl + Mouse Scroll functionality
+    useEffect(() => {
+      const handleWheel = (event) => {
+        if (event.ctrlKey) {
+          event.preventDefault(); // Prevent browser zoom
+          if (event.deltaY < 0) {
+            zoomIn(); // Scroll up: Zoom in
+          } else {
+            zoomOut(); // Scroll down: Zoom out
+          }
+        }
+      };
+  
+      window.addEventListener("wheel", handleWheel, { passive: false });
+  
+      return () => {
+        window.removeEventListener("wheel", handleWheel);
+      };
+    }, [zoomIn, zoomOut]);
+
   return (
     <div className="absolute top-4 left-4 right-4 flex items-center justify-between p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50 rounded-lg shadow-md">
       {/* Tools on the left */}
@@ -66,7 +87,6 @@ export default function Topbar() {
 
         {/* Action buttons */}
         <div className="flex space-x-2">
-          {/* Undo and Redo buttons */}
           <Button
             variant="ghost"
             size="icon"
